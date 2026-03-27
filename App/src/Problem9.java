@@ -1,13 +1,13 @@
 import java.util.*;
 
-class Transaction {
+class Tran {
     int id;
     double amount;
     String merchant;
     String account;
     long timestamp; // in milliseconds
 
-    Transaction(int id, double amount, String merchant, String account, long timestamp) {
+    Tran(int id, double amount, String merchant, String account, long timestamp) {
         this.id = id;
         this.amount = amount;
         this.merchant = merchant;
@@ -18,10 +18,10 @@ class Transaction {
 
 public class Problem9 {
 
-    private List<Transaction> transactions = new ArrayList<>();
+    private List<Tran> transactions = new ArrayList<>();
 
     // Add transaction
-    public void addTransaction(Transaction t) {
+    public void addTransaction(Tran t) {
         transactions.add(t);
     }
 
@@ -30,7 +30,7 @@ public class Problem9 {
         List<int[]> result = new ArrayList<>();
         Map<Double, Transaction> map = new HashMap<>();
 
-        for (Transaction t : transactions) {
+        for (Tran t : transactions) {
             double complement = target - t.amount;
             if (map.containsKey(complement)) {
                 result.add(new int[]{map.get(complement).id, t.id});
@@ -45,10 +45,10 @@ public class Problem9 {
         List<int[]> result = new ArrayList<>();
         Map<Double, List<Transaction>> map = new HashMap<>();
 
-        for (Transaction t : transactions) {
+        for (Tran t : transactions) {
             double complement = target - t.amount;
             if (map.containsKey(complement)) {
-                for (Transaction other : map.get(complement)) {
+                for (Tran other : map.get(complement)) {
                     if (Math.abs(t.timestamp - other.timestamp) <= windowMs) {
                         result.add(new int[]{other.id, t.id});
                     }
@@ -88,7 +88,7 @@ public class Problem9 {
         Map<String, List<String>> map = new HashMap<>();
         List<String> duplicates = new ArrayList<>();
 
-        for (Transaction t : transactions) {
+        for (Tran t : transactions) {
             String key = t.amount + "|" + t.merchant;
             map.putIfAbsent(key, new ArrayList<>());
             map.get(key).add(t.account);
