@@ -17,7 +17,7 @@ class Trade {
 
 public class TradeAnalysis {
 
-    // 🔵 Merge Sort (Ascending)
+    // Merge Sort (Ascending)
     public static void mergeSort(Trade[] arr, int left, int right) {
         if (left >= right) return;
 
@@ -50,7 +50,7 @@ public class TradeAnalysis {
         }
     }
 
-    // 🟢 Quick Sort (Descending)
+    //  Quick Sort (Descending)
     public static void quickSort(Trade[] arr, int low, int high) {
         if (low < high) {
             int pivotIndex = partition(arr, low, high);
@@ -80,12 +80,10 @@ public class TradeAnalysis {
         arr[i] = arr[j];
         arr[j] = temp;
     }
-
-    // 🟣 Merge Two Sorted Arrays
+    //  Merge Two Sorted Arrays
     public static Trade[] mergeTwoSorted(Trade[] a, Trade[] b) {
         int i = 0, j = 0, k = 0;
         Trade[] result = new Trade[a.length + b.length];
-
         while (i < a.length && j < b.length) {
             if (a[i].volume <= b[j].volume) {
                 result[k++] = a[i++];
@@ -93,14 +91,12 @@ public class TradeAnalysis {
                 result[k++] = b[j++];
             }
         }
-
         while (i < a.length) result[k++] = a[i++];
         while (j < b.length) result[k++] = b[j++];
 
         return result;
     }
-
-    // 🔴 Total Volume
+    //  Total Volume
     public static int totalVolume(Trade[] arr) {
         int sum = 0;
         for (Trade t : arr) {
@@ -108,16 +104,13 @@ public class TradeAnalysis {
         }
         return sum;
     }
-
-    // 🧪 Main Method
+    //  Main Method
     public static void main(String[] args) {
-
         Trade[] trades = {
                 new Trade(3, 500),
                 new Trade(1, 100),
                 new Trade(2, 300)
         };
-
         // Merge Sort (ASC)
         mergeSort(trades, 0, trades.length - 1);
         System.out.println("Merge Sort (ASC): " + Arrays.toString(trades));
@@ -125,7 +118,6 @@ public class TradeAnalysis {
         // Quick Sort (DESC)
         quickSort(trades, 0, trades.length - 1);
         System.out.println("Quick Sort (DESC): " + Arrays.toString(trades));
-
         // Morning & Afternoon sessions
         Trade[] morning = {
                 new Trade(1, 100),
@@ -135,11 +127,9 @@ public class TradeAnalysis {
         Trade[] afternoon = {
                 new Trade(3, 500)
         };
-
         // Merge both sessions
         Trade[] merged = mergeTwoSorted(morning, afternoon);
         System.out.println("Merged Trades: " + Arrays.toString(merged));
-
         // Total volume
         System.out.println("Total Volume: " + totalVolume(merged));
     }
