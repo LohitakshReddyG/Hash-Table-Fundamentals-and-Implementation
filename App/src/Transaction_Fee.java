@@ -1,7 +1,7 @@
 import java.util.*;
 
 class Transaction {
-    String id;
+    String id;   // FIX: changed from int → String
     double fee;
     String timestamp; // HH:mm format
 
@@ -16,7 +16,9 @@ class Transaction {
         return id + ":" + fee + "@" + timestamp;
     }
 }
+
 public class Transaction_Fee {
+
     public static void bubbleSort(List<Transaction> list) {
         int n = list.size();
         int passes = 0, swaps = 0;
@@ -24,6 +26,7 @@ public class Transaction_Fee {
         for (int i = 0; i < n - 1; i++) {
             boolean swapped = false;
             passes++;
+
             for (int j = 0; j < n - i - 1; j++) {
                 if (list.get(j).fee > list.get(j + 1).fee) {
                     // swap
@@ -35,10 +38,13 @@ public class Transaction_Fee {
                     swapped = true;
                 }
             }
+
             if (!swapped) break; // early termination
         }
+
         System.out.println("Bubble Sort -> Passes: " + passes + ", Swaps: " + swaps);
     }
+
     public static void insertionSort(List<Transaction> list) {
         int n = list.size();
         int shifts = 0;
@@ -52,16 +58,20 @@ public class Transaction_Fee {
                 j--;
                 shifts++;
             }
+
             list.set(j + 1, key);
         }
+
         System.out.println("Insertion Sort -> Shifts: " + shifts);
     }
+
     private static int compare(Transaction a, Transaction b) {
         if (a.fee != b.fee) {
-            return Double.compare(a.fee, b.fee);
+            return Double.compare(a.fee, b.fee); // sort by fee ASC
         }
-        return a.timestamp.compareTo(b.timestamp);
+        return a.timestamp.compareTo(b.timestamp); // tie-break by time
     }
+
     public static List<Transaction> findOutliers(List<Transaction> list) {
         List<Transaction> outliers = new ArrayList<>();
 
@@ -84,11 +94,14 @@ public class Transaction_Fee {
         } else {
             System.out.println("Use advanced sorting (Merge/Quick) for large datasets.");
         }
+
         List<Transaction> outliers = findOutliers(transactions);
+
         System.out.println("\nSorted Transactions:");
         for (Transaction t : transactions) {
             System.out.println(t);
         }
+
         System.out.println("\nHigh-fee outliers:");
         if (outliers.isEmpty()) {
             System.out.println("None");
@@ -98,11 +111,14 @@ public class Transaction_Fee {
             }
         }
     }
+
     public static void main(String[] args) {
         List<Transaction> list = new ArrayList<>();
+
         list.add(new Transaction("id1", 10.5, "10:00"));
         list.add(new Transaction("id2", 25.0, "09:30"));
         list.add(new Transaction("id3", 5.0, "10:15"));
+
         processTransactions(list);
     }
 }

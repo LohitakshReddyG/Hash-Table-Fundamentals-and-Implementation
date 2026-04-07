@@ -18,35 +18,38 @@ class Tran {
 
 public class Problem9 {
 
-    private List<Tran> transactions = new ArrayList<>();
+    private final List<Tran> transactions = new ArrayList<>();
 
     // Add transaction
     public void addTransaction(Tran t) {
         transactions.add(t);
     }
 
-    // Classic Two-Sum
+    // Two-Sum
     public List<int[]> findTwoSum(double target) {
         List<int[]> result = new ArrayList<>();
-        Map<Double, Transaction> map = new HashMap<>();
+        Map<Double, Tran> map = new HashMap<>();
 
         for (Tran t : transactions) {
             double complement = target - t.amount;
+
             if (map.containsKey(complement)) {
                 result.add(new int[]{map.get(complement).id, t.id});
             }
+
             map.put(t.amount, t);
         }
         return result;
     }
 
-    // Two-Sum with time window in milliseconds
+    // Two-Sum with time window
     public List<int[]> findTwoSumInWindow(double target, long windowMs) {
         List<int[]> result = new ArrayList<>();
-        Map<Double, List<Transaction>> map = new HashMap<>();
+        Map<Double, List<Tran>> map = new HashMap<>();
 
         for (Tran t : transactions) {
             double complement = target - t.amount;
+
             if (map.containsKey(complement)) {
                 for (Tran other : map.get(complement)) {
                     if (Math.abs(t.timestamp - other.timestamp) <= windowMs) {
@@ -54,23 +57,26 @@ public class Problem9 {
                     }
                 }
             }
+
             map.putIfAbsent(t.amount, new ArrayList<>());
             map.get(t.amount).add(t);
         }
+
         return result;
     }
 
-    // K-Sum (recursive)
+    // K-Sum
     public List<List<Integer>> findKSum(int k, double target) {
         List<List<Integer>> result = new ArrayList<>();
         findKSumHelper(transactions, 0, k, target, new ArrayList<>(), result);
         return result;
     }
 
-    private void findKSumHelper(List<Transaction> list, int start, int k, double target,
+    private void findKSumHelper(List<Tran> list, int start, int k, double target,
                                 List<Integer> path, List<List<Integer>> result) {
+
         if (k == 0) {
-            if (Math.abs(target) < 0.001) { // floating point tolerance
+            if (Math.abs(target) < 0.001) {
                 result.add(new ArrayList<>(path));
             }
             return;
@@ -78,32 +84,36 @@ public class Problem9 {
 
         for (int i = start; i < list.size(); i++) {
             path.add(list.get(i).id);
-            findKSumHelper(list, i + 1, k - 1, target - list.get(i).amount, path, result);
+            findKSumHelper(list, i + 1, k - 1,
+                    target - list.get(i).amount, path, result);
             path.remove(path.size() - 1);
         }
     }
 
-    // Detect duplicates: same amount, same merchant, different accounts
+    // Detect duplicates
     public List<String> detectDuplicates() {
         Map<String, List<String>> map = new HashMap<>();
         List<String> duplicates = new ArrayList<>();
 
         for (Tran t : transactions) {
             String key = t.amount + "|" + t.merchant;
+
             map.putIfAbsent(key, new ArrayList<>());
             map.get(key).add(t.account);
         }
 
         for (String key : map.keySet()) {
             Set<String> accounts = new HashSet<>(map.get(key));
+
             if (accounts.size() > 1) {
                 duplicates.add(key + ", accounts: " + accounts);
             }
         }
+
         return duplicates;
     }
 
-    // Sample main with input from user
+    // Main
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Problem9 system = new Problem9();
@@ -117,63 +127,74 @@ public class Problem9 {
             System.out.println("5. Detect Duplicates");
             System.out.println("6. Exit");
             System.out.print("Enter choice: ");
+
             int choice = sc.nextInt();
             sc.nextLine();
 
             switch (choice) {
+
                 case 1:
                     System.out.print("ID: ");
                     int id = sc.nextInt();
-                    sc.nextLine();
                     System.out.print("Amount: ");
                     double amount = sc.nextDouble();
                     sc.nextLine();
+
                     System.out.print("Merchant: ");
                     String merchant = sc.nextLine();
+
                     System.out.print("Account: ");
                     String account = sc.nextLine();
+
                     System.out.print("Timestamp (ms): ");
                     long ts = sc.nextLong();
-                    sc.nextLine();
-                    system.addTransaction(new Transaction(id, amount, merchant, account, ts));
+
+                    system.addTransaction(new Tran(id, amount, merchant, account, ts));
                     System.out.println("Transaction added.");
                     break;
 
                 case 2:
                     System.out.print("Target Amount: ");
                     double target = sc.nextDouble();
-                    sc.nextLine();
+
                     List<int[]> twoSum = system.findTwoSum(target);
                     System.out.println("Two-Sum Pairs:");
-                    for (int[] pair : twoSum) System.out.println(Arrays.toString(pair));
+                    for (int[] pair : twoSum)
+                        System.out.println(Arrays.toString(pair));
                     break;
 
                 case 3:
                     System.out.print("Target Amount: ");
                     target = sc.nextDouble();
-                    sc.nextLine();
-                    long window = 3600 * 1000; // 1 hour in ms
+
+                    long window = 3600 * 1000;
                     List<int[]> twoSumWindow = system.findTwoSumInWindow(target, window);
-                    System.out.println("Two-Sum Pairs within 1-hour:");
-                    for (int[] pair : twoSumWindow) System.out.println(Arrays.toString(pair));
+
+                    System.out.println("Pairs within 1 hour:");
+                    for (int[] pair : twoSumWindow)
+                        System.out.println(Arrays.toString(pair));
                     break;
 
                 case 4:
                     System.out.print("K: ");
                     int k = sc.nextInt();
-                    sc.nextLine();
-                    System.out.print("Target Amount: ");
+
+                    System.out.print("Target: ");
                     target = sc.nextDouble();
-                    sc.nextLine();
+
                     List<List<Integer>> kSum = system.findKSum(k, target);
+
                     System.out.println("K-Sum Results:");
-                    for (List<Integer> res : kSum) System.out.println(res);
+                    for (List<Integer> res : kSum)
+                        System.out.println(res);
                     break;
 
                 case 5:
                     List<String> duplicates = system.detectDuplicates();
-                    System.out.println("Duplicate Transactions:");
-                    for (String d : duplicates) System.out.println(d);
+
+                    System.out.println("Duplicates:");
+                    for (String d : duplicates)
+                        System.out.println(d);
                     break;
 
                 case 6:
@@ -182,7 +203,7 @@ public class Problem9 {
                     return;
 
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println("Invalid choice");
             }
         }
     }
